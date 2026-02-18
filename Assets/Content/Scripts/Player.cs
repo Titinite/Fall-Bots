@@ -122,7 +122,7 @@ public class Player : MonoBehaviour //NetworkBehaviour
     #region Constants
     private const float GRAVITY = -20;
     private const float KMH_TO_MS = 1 / 3.6f;
-    private const float GROUND_STICK_FORCE = -1;
+    private const float GROUND_STICK_FORCE = -2;
     #endregion
 
     #region Network
@@ -374,7 +374,7 @@ public class Player : MonoBehaviour //NetworkBehaviour
         }
 
         _groundCheckOffset = _references.Controller.center + Vector3.up * (_references.Controller.height * -.5f + _references.Controller.radius - _references.Controller.skinWidth - _settings.GroundTolerance);
-        _groundCheckRadius = _references.Controller.radius + _references.Controller.skinWidth;
+        _groundCheckRadius = _references.Controller.radius;
     }
 
     private void GetInputs()
@@ -555,6 +555,8 @@ public class Player : MonoBehaviour //NetworkBehaviour
 
         _references.Controller.Move(velocity);
 
+        // Apply player rotation
+
         if (lookDir.sqrMagnitude > .01f)
         {
             Quaternion targetRotation = Quaternion.LookRotation(lookDir, Vector3.up);
@@ -580,10 +582,14 @@ public class Player : MonoBehaviour //NetworkBehaviour
         }
         else
         {
-            _state.CurrentState = _state.HorizontalVelocity.sqrMagnitude > 0.1f
-                ? PlayerState.Moving
-                : PlayerState.Idle;
+            if (_state.VerticalVelocity <= 0)
+                _state.CurrentState = _state.HorizontalVelocity.sqrMagnitude > 0.1f
+                    ? PlayerState.Moving
+                    : PlayerState.Idle;
         }
+
+        //if (_state.CurrentState != previousState)
+        //    Debug.Log($"{previousState} → {_state.CurrentState}");
     }
     #endregion
 }
