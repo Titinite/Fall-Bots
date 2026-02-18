@@ -7,7 +7,7 @@ public class FallingPlatform : MonoBehaviour
     [System.Serializable]
     private class Settings
     {
-        public float FallDelay = .5f;
+        public float FallDelay = .2f;
         public float RecoverDelay = 5;
     }
 
