@@ -1,21 +1,18 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-//using Unity.Netcode;
-//using Unity.Netcode.Components;
 
 /// <summary>
 /// Player controller.
 /// </summary>
 [RequireComponent(typeof(CharacterController))]
-public class Player : MonoBehaviour //NetworkBehaviour
+public class Player : MonoBehaviour
 {
     public static Player Owner { get; private set; }
 
     public enum PlayerType
     {
         Local,
-        //Network
     }
 
     public enum PlayerState
@@ -63,7 +60,6 @@ public class Player : MonoBehaviour //NetworkBehaviour
     {
         public CharacterController Controller;
         public InputActionAsset InputActions;
-        //public NetworkTransform NetworkTransform;
     }
 
     [System.Serializable]
@@ -126,62 +122,7 @@ public class Player : MonoBehaviour //NetworkBehaviour
     #endregion
 
     #region Network
-    const bool IsOwner = true; // Remove when enable Network
-    /*
-    // Network variables to synchronize state
-    private NetworkVariable<PlayerState> _networkCurrentState = new NetworkVariable<PlayerState>(
-        PlayerState.Idle,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Owner
-    );
-
-    private NetworkVariable<Vector2> _networkHorizontalVelocity = new NetworkVariable<Vector2>(
-        Vector2.zero,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Owner
-    );
-
-    public override void OnNetworkSpawn()
-    {
-        base.OnNetworkSpawn();
-
-        _references.NetworkTransform.Interpolate = !IsOwner;
-
-        if (IsOwner)
-        {
-            Init();
-        }
-        else
-        {
-            // Subscribe to NetworkVariable changes for non-owners
-            _networkCurrentState.OnValueChanged += OnNetworkStateChanged;
-            _networkHorizontalVelocity.OnValueChanged += OnNetworkHorizontalVelocityChanged;
-        }
-    }
-
-    public override void OnNetworkDespawn()
-    {
-        base.OnNetworkDespawn();
-
-        // Unsubscribe from NetworkVariable changes
-        if (!IsOwner)
-        {
-            _networkCurrentState.OnValueChanged -= OnNetworkStateChanged;
-            _networkHorizontalVelocity.OnValueChanged -= OnNetworkHorizontalVelocityChanged;
-        }
-    }
-
-    // Callback when player state changes (for non-owners)
-    private void OnNetworkStateChanged(PlayerState previousState, PlayerState newState)
-    {
-        _state.CurrentState = newState;
-    }
-
-    // Callback when horizontal velocity changes (for non-owners)
-    private void OnNetworkHorizontalVelocityChanged(Vector2 previousVelocity, Vector2 newVelocity)
-    {
-        _state.HorizontalVelocity = newVelocity;
-    }*/
+    const bool IsOwner = true;
     #endregion
 
     #region Unity Debug
@@ -199,9 +140,6 @@ public class Player : MonoBehaviour //NetworkBehaviour
             debug += $"Vertical Velocity: {_state.VerticalVelocity / KMH_TO_MS:F2} km/h\n";
             debug += $"Grounded: {_state.IsGrounded}\n";
             debug += $"State: {_state.CurrentState}\n";
-            //debug += $"IsOwner: {IsOwner}\n";
-            //debug += $"IsServer: {IsServer}\n";
-            //debug += $"IsClient: {IsClient}";
 
             GUI.Label(new Rect(10, 10, 400, 200), debug, style);
         }
@@ -211,7 +149,6 @@ public class Player : MonoBehaviour //NetworkBehaviour
     {
         if (_settings.Type == PlayerType.Local || IsOwner)
         {
-            // Draw ground check sphere
             Gizmos.matrix = transform.localToWorldMatrix;
             Gizmos.color = _state.IsGrounded ? Color.green : new Color(1, .5f, 0);
             Gizmos.DrawWireSphere(_groundCheckOffset, _groundCheckRadius);
@@ -243,16 +180,6 @@ public class Player : MonoBehaviour //NetworkBehaviour
             SetVelocity(deltaTime);
             SetMovement(deltaTime);
             UpdateState();
-        }
-    }
-
-    void LateUpdate()
-    {
-        // Owner sends state to network
-        if (IsOwner)
-        {
-            //_networkCurrentState.Value = _state.CurrentState;
-            //_networkHorizontalVelocity.Value = _state.HorizontalVelocity;
         }
     }
     #endregion
@@ -417,7 +344,6 @@ public class Player : MonoBehaviour //NetworkBehaviour
         {
             Transform newPlatform = _groundCheckResults[0].transform;
 
-            // If platform changed, initialize last frame values
             if (newPlatform != _state.GroundTransform)
             {
                 _state.GroundTransform = newPlatform;
@@ -428,12 +354,10 @@ public class Player : MonoBehaviour //NetworkBehaviour
         }
         else
         {
-            // If player just left the platform
             if (wasGrounded && _state.GroundTransform != null)
             {
                 Vector3 platformVelocity = (_state.GroundTransform.position - _groundContactPosition) / deltaTime;
 
-                // Add platform velovity to player ground velocity
                 _state.GroundVelocity = platformVelocity;
             }
 
@@ -443,8 +367,6 @@ public class Player : MonoBehaviour //NetworkBehaviour
 
     private void SetVelocity(float deltaTime)
     {
-        // Determine movement attenuation based on current state
-
         float moveAtten;
         switch (_state.CurrentState)
         {
@@ -463,15 +385,12 @@ public class Player : MonoBehaviour //NetworkBehaviour
                 break;
         }
 
-        // Update horizontal velocity
-
         Vector2 horizontalVelocity = _state.HorizontalVelocity;
 
         if (moveAtten > 0 && Camera.main)
         {
             Vector2 move = Vector2.zero;
 
-            // Don't apply move to velocity if paused
             if (!_state.IsPaused)
             {
                 Vector3 forward = Camera.main.transform.forward;
@@ -495,8 +414,6 @@ public class Player : MonoBehaviour //NetworkBehaviour
 
         _state.HorizontalVelocity = horizontalVelocity.magnitude > .01f ? horizontalVelocity : Vector2.zero;
 
-        // Update vertical velocity
-
         float verticalVelocity = _state.VerticalVelocity;
 
         if (_state.IsGrounded && _jumpInput && !_state.IsPaused)
@@ -518,33 +435,26 @@ public class Player : MonoBehaviour //NetworkBehaviour
 
     private void SetMovement(float deltaTime)
     {
-        // Apply platform movement and rotation
+        if (!_references.Controller.enabled)
+            return;
 
         if (_state.GroundTransform)
         {
-            // Calculate platform delta position
             Vector3 platformPositionDelta = _state.GroundTransform.position - _groundContactPosition;
 
-            // Calculate platform delta rotation
             Quaternion platformRotationDelta = _state.GroundTransform.rotation * Quaternion.Inverse(_groundContactRotation);
 
-            // Apply rotation around platform center
             Vector3 localPosition = transform.position - _state.GroundTransform.position;
             Vector3 rotatedPosition = platformRotationDelta * localPosition;
             platformPositionDelta += rotatedPosition - localPosition;
 
-            // Move player with platform
             _references.Controller.Move(platformPositionDelta);
 
-            // Rotate player with platform
             transform.Rotate(Vector3.up, platformRotationDelta.eulerAngles.y, Space.World);
 
-            // Update last frame values
             _groundContactPosition = _state.GroundTransform.position;
             _groundContactRotation = _state.GroundTransform.rotation;
         }
-
-        // Apply player movement
 
         Vector3 lookDir = new Vector3(_state.HorizontalVelocity.x, 0, _state.HorizontalVelocity.y);
         Vector3 velocity = lookDir;
@@ -554,8 +464,6 @@ public class Player : MonoBehaviour //NetworkBehaviour
         velocity *= deltaTime;
 
         _references.Controller.Move(velocity);
-
-        // Apply player rotation
 
         if (lookDir.sqrMagnitude > .01f)
         {
@@ -587,9 +495,20 @@ public class Player : MonoBehaviour //NetworkBehaviour
                     ? PlayerState.Moving
                     : PlayerState.Idle;
         }
-
-        //if (_state.CurrentState != previousState)
-        //    Debug.Log($"{previousState} → {_state.CurrentState}");
     }
     #endregion
+
+    public void Respawn(Vector3 position)
+    {
+        _references.Controller.enabled = false;
+        transform.position = position;
+        _references.Controller.enabled = true;
+
+        _state.VerticalVelocity = 0f;
+        _state.HorizontalVelocity = Vector2.zero;
+        _state.ExtraVelocity = Vector3.zero;
+        _state.GroundVelocity = Vector3.zero;
+
+        _state.CurrentState = PlayerState.Idle;
+    }
 }

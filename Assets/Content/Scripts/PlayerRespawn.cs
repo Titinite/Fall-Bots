@@ -15,7 +15,6 @@ public class PlayerRespawn : MonoBehaviour
     {
         public Animator Animator;
         public MonoBehaviour PlayerController;
-        public CharacterController CharacterController;
     }
 
     [SerializeField] private Settings _settings;
@@ -35,27 +34,18 @@ public class PlayerRespawn : MonoBehaviour
     {
         _isDead = true;
 
-        // Désactive le contrôle
-        if (_references.PlayerController)
-            _references.PlayerController.enabled = false;
+        Player player = _references.PlayerController as Player;
 
-        // Joue animation
+        if (player != null)
+            player.Eliminate();
+
         if (_references.Animator)
             _references.Animator.SetTrigger("trigger_die");
 
         yield return new WaitForSeconds(_settings.DeathDuration);
 
-        // IMPORTANT avec CharacterController
-        if (_references.CharacterController)
-            _references.CharacterController.enabled = false;
-
-        transform.position = _settings.RespawnPosition;
-
-        if (_references.CharacterController)
-            _references.CharacterController.enabled = true;
-
-        if (_references.PlayerController)
-            _references.PlayerController.enabled = true;
+        if (player != null)
+            player.Respawn(_settings.RespawnPosition);
 
         _isDead = false;
     }
