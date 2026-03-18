@@ -6,7 +6,7 @@ public class LevelPortal : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            SceneLoader.Instance.LoadNextScene();
+            Debug.Log("Player entered the portal. Transitioning to next level...");
         }
     }
 }
