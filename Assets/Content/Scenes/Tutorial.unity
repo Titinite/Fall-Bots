@@ -1660,6 +1660,7 @@ Transform:
   - {fileID: 653950416}
   - {fileID: 1797750898}
   - {fileID: 1947647356}
+  - {fileID: 1612631366}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1261789523
@@ -1766,11 +1767,6 @@ Transform:
   - {fileID: 389851000}
   m_Father: {fileID: 1620379216}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1338377669 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7639418806218873425, guid: dce89e082ea7b9c48ab0fe0f0d38f147, type: 3}
-  m_PrefabInstance: {fileID: 2024213908}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1338377670 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7011957565800906987, guid: dce89e082ea7b9c48ab0fe0f0d38f147, type: 3}
@@ -1781,54 +1777,6 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 6268899434028451206, guid: dce89e082ea7b9c48ab0fe0f0d38f147, type: 3}
   m_PrefabInstance: {fileID: 2024213908}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1338377672
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1338377669}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6bef5218b0f2dea44a4d95d58d0a6f37, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerVisual
-  _references:
-    Player: {fileID: 1695111358}
-    Anim: {fileID: 1338377671}
-  _playerAnimationStateMapper:
-  - PlayerState: 0
-    AnimatorState: move
-    BlockingState: 
-    Trigger: trigger_move
-  - PlayerState: 1
-    AnimatorState: move
-    BlockingState: 
-    Trigger: trigger_move
-  - PlayerState: 2
-    AnimatorState: jump
-    BlockingState: fall
-    Trigger: trigger_jump
-  - PlayerState: 3
-    AnimatorState: fall
-    BlockingState: jump
-    Trigger: trigger_fall
-  - PlayerState: 4
-    AnimatorState: stunned
-    BlockingState: 
-    Trigger: trigger_stun
-  - PlayerState: 5
-    AnimatorState: die
-    BlockingState: 
-    Trigger: trigger_die
-  - PlayerState: 6
-    AnimatorState: loose
-    BlockingState: 
-    Trigger: trigger_loose
-  - PlayerState: 7
-    AnimatorState: win
-    BlockingState: 
-    Trigger: trigger_win
 --- !u!1001 &1339701036
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2235,6 +2183,50 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 99e24deb2727a1847bbdd6de0d88977f, type: 3}
+--- !u!1 &1612631365
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1612631366}
+  - component: {fileID: 1612631367}
+  m_Layer: 6
+  m_Name: SceneLoader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1612631366
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1612631365}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1256113476}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1612631367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1612631365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 384930ef280872345adc8614a911a5bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SceneLoader
 --- !u!1 &1620379215
 GameObject:
   m_ObjectHideFlags: 0
@@ -2836,6 +2828,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1695111359}
     m_Modifications:
+    - target: {fileID: 2034821960031838459, guid: dce89e082ea7b9c48ab0fe0f0d38f147, type: 3}
+      propertyPath: _references.Player
+      value: 
+      objectReference: {fileID: 1695111358}
     - target: {fileID: 7011957565800906987, guid: dce89e082ea7b9c48ab0fe0f0d38f147, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2883,10 +2879,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7639418806218873425, guid: dce89e082ea7b9c48ab0fe0f0d38f147, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1338377672}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dce89e082ea7b9c48ab0fe0f0d38f147, type: 3}
 --- !u!1001 &2061231484
 PrefabInstance:
