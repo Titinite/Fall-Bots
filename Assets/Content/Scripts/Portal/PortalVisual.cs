@@ -8,7 +8,7 @@ using UnityEngine;
 public class PortalVisual : MonoBehaviour
 {
     [Header("Rotation")]
-    public float innerRotationSpeed = 45f;   // degrees per second
+    public float innerRotationSpeed = 45f;
     public float outerRotationSpeed = -20f;
 
     [Header("Pulse")]
@@ -17,9 +17,9 @@ public class PortalVisual : MonoBehaviour
 
     [Header("Color Shift")]
     [ColorUsage(true, true)]
-    public Color colorA = new Color(0.1f, 0.4f, 1.0f, 1f);   // blue-violet
+    public Color colorA = new Color(0.1f, 0.4f, 1.0f, 1f);
     [ColorUsage(true, true)]
-    public Color colorB = new Color(0.6f, 0.1f, 1.0f, 1f);   // violet-magenta
+    public Color colorB = new Color(0.6f, 0.1f, 1.0f, 1f);
 
     [Header("References")]
     [Tooltip("Inner disc transform (child)")]
@@ -27,7 +27,6 @@ public class PortalVisual : MonoBehaviour
     [Tooltip("Outer ring transform (child)")]
     public Transform outerRing;
 
-    // Shader property IDs — match names in PortalUnlit.shader
     private static readonly int PropColor1 = Shader.PropertyToID("_Color1");
     private static readonly int PropColor2 = Shader.PropertyToID("_Color2");
     private static readonly int PropTwirl = Shader.PropertyToID("_TwirlSpeed");
@@ -38,25 +37,22 @@ public class PortalVisual : MonoBehaviour
 
     private void Start()
     {
-        _mat = GetComponent<Renderer>().material; // instance copy
-        _baseScale = transform.localScale; // préserve le scale non-uniforme (ex: 2, 0.05, 2)
+        _mat = GetComponent<Renderer>().material;
+        _baseScale = transform.localScale;
     }
 
     private void Update()
     {
         float t = Time.time;
 
-        // ── Rotation ──
         if (innerDisc != null)
             innerDisc.Rotate(Vector3.up, innerRotationSpeed * Time.deltaTime, Space.Self);
         if (outerRing != null)
             outerRing.Rotate(Vector3.up, outerRotationSpeed * Time.deltaTime, Space.Self);
 
-        // ── Pulse scale ──
         float pulse = 1f + Mathf.Sin(t * pulseSpeed * Mathf.PI * 2f) * pulseAmplitude;
         transform.localScale = _baseScale * pulse;
 
-        // ── Color shift ──
         if (_mat != null)
         {
             float lerp = (Mathf.Sin(t * 0.5f) + 1f) * 0.5f;

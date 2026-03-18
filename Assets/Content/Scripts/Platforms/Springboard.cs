@@ -12,7 +12,6 @@ public class Springboard : MonoBehaviour
     {
         if (Player.Owner && col.gameObject == Player.Owner.gameObject)
         {
-            Debug.Log("Springboard triggered by " + col.gameObject.name);
             Player.Owner.AddExtraForce(Vector3.up * _force, true, _duration, _curve);
             _onJump?.Invoke();
         }

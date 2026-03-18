@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VectorGraphics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -39,7 +40,6 @@ public class PortalTeleporter : MonoBehaviour
 
     private IEnumerator TeleportSequence()
     {
-        // Trigger burst particles
         foreach (var ps in burstParticles)
         {
             if (ps != null) ps.Play();
@@ -47,10 +47,13 @@ public class PortalTeleporter : MonoBehaviour
 
         yield return new WaitForSeconds(delayBeforeFade);
 
-        // Fade out
         yield return ScreenFader.Instance.FadeOut(fadeDuration);
 
-        // Load next scene
-        SceneManager.LoadScene(targetSceneName);
+        AsyncOperation operation = SceneManager.LoadSceneAsync(targetSceneName);
+
+        while (!operation.isDone)
+        {
+            yield return null;
+        }
     }
 }

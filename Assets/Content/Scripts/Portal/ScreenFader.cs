@@ -8,7 +8,6 @@ using UnityEngine.UI;
 /// </summary>
 public class ScreenFader : MonoBehaviour
 {
-    // ── Singleton ──────────────────────────────────────────────────────────
     private static ScreenFader _instance;
     public static ScreenFader Instance
     {
@@ -24,13 +23,10 @@ public class ScreenFader : MonoBehaviour
             return _instance;
         }
     }
-
-    // ── Private fields ─────────────────────────────────────────────────────
     private Canvas _canvas;
     private Image  _overlay;
     private bool   _initialized = false;
 
-    // ── Initialization ─────────────────────────────────────────────────────
     private void Awake()
     {
         if (_instance != null && _instance != this) { Destroy(gameObject); return; }
@@ -44,19 +40,17 @@ public class ScreenFader : MonoBehaviour
         if (_initialized) return;
         _initialized = true;
 
-        // Canvas
         _canvas = gameObject.AddComponent<Canvas>();
         _canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         _canvas.sortingOrder = 9999;
         gameObject.AddComponent<CanvasScaler>();
         gameObject.AddComponent<GraphicRaycaster>();
 
-        // Full-screen black overlay
         var overlayGo = new GameObject("Overlay");
         overlayGo.transform.SetParent(_canvas.transform, false);
 
         _overlay = overlayGo.AddComponent<Image>();
-        _overlay.color = new Color(0, 0, 0, 0); // start transparent
+        _overlay.color = new Color(0, 0, 0, 0);
 
         var rect = _overlay.rectTransform;
         rect.anchorMin = Vector2.zero;
@@ -64,8 +58,6 @@ public class ScreenFader : MonoBehaviour
         rect.offsetMin  = Vector2.zero;
         rect.offsetMax  = Vector2.zero;
     }
-
-    // ── Public API ─────────────────────────────────────────────────────────
 
     /// <summary>Fades the screen to black over <paramref name="duration"/> seconds.</summary>
     public IEnumerator FadeOut(float duration)
@@ -79,7 +71,6 @@ public class ScreenFader : MonoBehaviour
         yield return Fade(1f, 0f, duration);
     }
 
-    // ── Internal ───────────────────────────────────────────────────────────
     private IEnumerator Fade(float from, float to, float duration)
     {
         float elapsed = 0f;
