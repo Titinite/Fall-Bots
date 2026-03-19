@@ -1,16 +1,13 @@
 using System.Collections;
+using Unity.VectorGraphics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/// <summary>
-/// PortalTeleporter — attach on the Portal prefab root.
-/// Configure targetSceneName in the Inspector.
-/// </summary>
 public class PortalTeleporter : MonoBehaviour
 {
     [Header("Scene Settings")]
     [Tooltip("Exact name of the scene to load (must be added to Build Settings)")]
-    public string targetSceneName = "Level2";
+    public string targetSceneName = "Menu";
 
     [Header("Portal FX")]
     [Tooltip("Particle system children to activate on player enter")]
@@ -39,7 +36,6 @@ public class PortalTeleporter : MonoBehaviour
 
     private IEnumerator TeleportSequence()
     {
-        // Trigger burst particles
         foreach (var ps in burstParticles)
         {
             if (ps != null) ps.Play();
@@ -47,10 +43,13 @@ public class PortalTeleporter : MonoBehaviour
 
         yield return new WaitForSeconds(delayBeforeFade);
 
-        // Fade out
         yield return ScreenFader.Instance.FadeOut(fadeDuration);
 
-        // Load next scene
-        SceneManager.LoadScene(targetSceneName);
+        AsyncOperation operation = SceneManager.LoadSceneAsync(targetSceneName);
+
+        while (!operation.isDone)
+        {
+            yield return null;
+        }
     }
 }

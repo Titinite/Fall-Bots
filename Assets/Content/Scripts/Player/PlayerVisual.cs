@@ -7,6 +7,7 @@ public class PlayerVisual : MonoBehaviour
     private class Customization
     {
         [ColorUsage(false, true)] public Color[] Colors;
+        public int ActiveAccessoryIndex = -1;
     }
 
     [System.Serializable]
@@ -32,6 +33,9 @@ public class PlayerVisual : MonoBehaviour
 
     [SerializeField]
     private References _references;
+
+    [SerializeField]
+    private GameObject[] _accessories;
 
     [SerializeField]
     private PlayerAnimationStateMapper[] _playerAnimationStateMapper;
@@ -65,6 +69,23 @@ public class PlayerVisual : MonoBehaviour
 
             _customization.Colors[i] = col;
         }
+
+        if (_accessories != null && _accessories.Length > 0)
+        {
+            int newIndex;
+            if (_accessories.Length > 1)
+            {
+                do { newIndex = Random.Range(0, _accessories.Length); }
+                while (newIndex == _customization.ActiveAccessoryIndex);
+            }
+            else
+            {
+                newIndex = 0;
+            }
+
+            _customization.ActiveAccessoryIndex = newIndex;
+        }
+
         SetCustom();
         SaveCustom();
     }
@@ -88,12 +109,24 @@ public class PlayerVisual : MonoBehaviour
                 }
             }
         }
+
+        if (_accessories != null && _accessories.Length > 0)
+        {
+            for (int i = 0; i < _accessories.Length; i++)
+            {
+                if (_accessories[i] != null)
+                    _accessories[i].SetActive(i == _customization.ActiveAccessoryIndex);
+            }
+        }
     }
 
     private void LoadCustom()
     {
         if (!PlayerPrefs.HasKey(PP_CUSTOM))
+        {
+            SetAllAccessoriesOff();
             return;
+        }
 
         string json = PlayerPrefs.GetString(PP_CUSTOM);
         _customization = JsonUtility.FromJson<Customization>(json);
@@ -105,6 +138,13 @@ public class PlayerVisual : MonoBehaviour
     {
         string json = JsonUtility.ToJson(_customization);
         PlayerPrefs.SetString(PP_CUSTOM, json);
+    }
+
+    private void SetAllAccessoriesOff()
+    {
+        if (_accessories == null) return;
+        foreach (var acc in _accessories)
+            if (acc != null) acc.SetActive(false);
     }
 
     private void UpdateAnimation()
@@ -121,16 +161,16 @@ public class PlayerVisual : MonoBehaviour
         AnimatorStateInfo nextState = _references.Anim.GetNextAnimatorStateInfo(0);
 
         PlayerAnimationStateMapper currentStateMapper = _playerAnimationStateMapper.FirstOrDefault(m => m.PlayerState == _references.Player.State.CurrentState);
-    
-        if (currentStateMapper != null 
-            && !currentState.IsName(currentStateMapper.AnimatorState) 
-            && !nextState.IsName(currentStateMapper.AnimatorState) 
+
+        if (currentStateMapper != null
+            && !currentState.IsName(currentStateMapper.AnimatorState)
+            && !nextState.IsName(currentStateMapper.AnimatorState)
             && !currentState.IsName(currentStateMapper.BlockingState))
         {
             _references.Anim.SetTrigger(currentStateMapper.Trigger);
         }
-        
-        switch(_references.Player.State.CurrentState)
+
+        switch (_references.Player.State.CurrentState)
         {
             case Player.PlayerState.Idle:
             case Player.PlayerState.Moving:

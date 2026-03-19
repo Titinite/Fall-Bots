@@ -4,6 +4,12 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
+    private void Start()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
     public void LoadScene(string sceneName)
     {
         StartCoroutine(LoadAsync(sceneName));
