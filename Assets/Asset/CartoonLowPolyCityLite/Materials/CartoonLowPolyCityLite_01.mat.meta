@@ -1,15 +1,8 @@
 fileFormatVersion: 2
-guid: c8e0240e9684da34f8e797593fcd659e
+guid: a10d93b6a7112fd4ab2e6f7649e2d202
 NativeFormatImporter:
   externalObjects: {}
-  mainObjectFileID: 2100000
+  mainObjectFileID: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 166617
-  packageName: Cartoon Low Poly City Pack Lite
-  packageVersion: 1.21
-  assetPath: Assets/CartoonLowPolyCityLite/Materials/CartoonLowPolyCityLite_01.mat
-  uploadId: 561603
