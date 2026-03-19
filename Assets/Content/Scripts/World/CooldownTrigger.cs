@@ -3,10 +3,7 @@ using System.Collections;
 
 public class CooldownTrigger : MonoBehaviour
 {
-    [Header("Objet à désactiver")]
     public GameObject targetObject;
-
-    [Header("Durée du cooldown (secondes)")]
     public float cooldown = 10f;
 
     private bool isOnCooldown = false;
