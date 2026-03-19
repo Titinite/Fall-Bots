@@ -254,6 +254,10 @@ PrefabInstance:
       propertyPath: delayBeforeFade
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 6818284055202272280, guid: 0e4e80c3c452a154d83175b7d65e658c, type: 3}
+      propertyPath: targetSceneName
+      value: Menu Level Select
+      objectReference: {fileID: 0}
     - target: {fileID: 7175688916824458492, guid: 0e4e80c3c452a154d83175b7d65e658c, type: 3}
       propertyPath: m_Name
       value: Portal

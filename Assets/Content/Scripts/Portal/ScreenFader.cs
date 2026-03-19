@@ -2,10 +2,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// ScreenFader — Singleton that manages full-screen fade in/out.
-/// Automatically creates its own Canvas if not present in the scene.
-/// </summary>
 public class ScreenFader : MonoBehaviour
 {
     private static ScreenFader _instance;
@@ -59,13 +55,11 @@ public class ScreenFader : MonoBehaviour
         rect.offsetMax  = Vector2.zero;
     }
 
-    /// <summary>Fades the screen to black over <paramref name="duration"/> seconds.</summary>
     public IEnumerator FadeOut(float duration)
     {
         yield return Fade(0f, 1f, duration);
     }
 
-    /// <summary>Fades the screen from black to clear over <paramref name="duration"/> seconds.</summary>
     public IEnumerator FadeIn(float duration)
     {
         yield return Fade(1f, 0f, duration);
@@ -73,6 +67,8 @@ public class ScreenFader : MonoBehaviour
 
     private IEnumerator Fade(float from, float to, float duration)
     {
+        _overlay.gameObject.SetActive(true);
+
         float elapsed = 0f;
         Color c = _overlay.color;
 
@@ -83,8 +79,10 @@ public class ScreenFader : MonoBehaviour
             _overlay.color = c;
             yield return null;
         }
-
         c.a = to;
         _overlay.color = c;
+
+        if (to <= 0f)
+            _overlay.gameObject.SetActive(false);
     }
 }

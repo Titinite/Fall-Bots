@@ -1,9 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// PortalVisual — drives the shader parameters and transforms for the portal effect.
-/// Attach on the portal mesh GameObject (child of Portal root).
-/// </summary>
 [RequireComponent(typeof(Renderer))]
 public class PortalVisual : MonoBehaviour
 {

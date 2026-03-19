@@ -3,15 +3,11 @@ using Unity.VectorGraphics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/// <summary>
-/// PortalTeleporter — attach on the Portal prefab root.
-/// Configure targetSceneName in the Inspector.
-/// </summary>
 public class PortalTeleporter : MonoBehaviour
 {
     [Header("Scene Settings")]
     [Tooltip("Exact name of the scene to load (must be added to Build Settings)")]
-    public string targetSceneName = "Level2";
+    public string targetSceneName = "Menu";
 
     [Header("Portal FX")]
     [Tooltip("Particle system children to activate on player enter")]

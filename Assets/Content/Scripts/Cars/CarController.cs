@@ -1,18 +1,11 @@
 using UnityEngine;
 
-/// <summary>
-/// CarController — fait circuler une voiture en boucle sur des waypoints.
-/// Attache ce script sur chaque voiture.
-/// Crée un GameObject vide "CarPath" avec des enfants vides comme waypoints.
-/// </summary>
 public class CarController : MonoBehaviour
 {
     [Header("Waypoints")]
-    [Tooltip("Glisse ici le GameObject parent qui contient les waypoints enfants (dans l'ordre)")]
     public Transform waypointsParent;
 
     [Header("Déplacement")]
-    public float speed = 6f;
     public float rotationSpeed = 8f;
 
     [Header("Waypoint Settings")]
@@ -68,7 +61,7 @@ public class CarController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
         }
 
-        transform.position += speed * Time.deltaTime * transform.forward;
+        transform.position += CarManager.Instance.speed * Time.deltaTime * transform.forward;
 
         float dist = Vector3.Distance(transform.position, target.position);
         if (dist <= reachDistance)
