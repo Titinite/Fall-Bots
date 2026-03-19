@@ -20002,6 +20002,18 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4521525752278216472, guid: 5a38a57c321303e46a647a19ab8b6a8c, type: 3}
+      propertyPath: _settings.RespawnPosition.x
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4521525752278216472, guid: 5a38a57c321303e46a647a19ab8b6a8c, type: 3}
+      propertyPath: _settings.RespawnPosition.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4521525752278216472, guid: 5a38a57c321303e46a647a19ab8b6a8c, type: 3}
+      propertyPath: _settings.RespawnPosition.z
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 5699399256708589881, guid: 5a38a57c321303e46a647a19ab8b6a8c, type: 3}
       propertyPath: m_Name
       value: Player Variant
